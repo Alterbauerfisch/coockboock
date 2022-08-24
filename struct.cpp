@@ -27,7 +27,7 @@ class node {
 //setter
     void set_next (node *inp){
       next = inp;
-      if(inp->get_prev() != this){
+      if(inp != 0 && inp->get_prev() != this){
         inp->set_prev(this);
       };
       return;
@@ -35,7 +35,7 @@ class node {
 
     void set_prev (node *inp){
       prev = inp;
-      if(inp->get_next() != this){
+      if(inp != 0 &&inp->get_next() != this){
         inp -> set_next(this); 
       };
       return;
@@ -57,7 +57,6 @@ class node {
     node* get_prev(){
       return prev;
     };
-
 };
 
 class list {
@@ -97,46 +96,77 @@ void sub (int inp){
 //public function
   void add_node(cont *inp){
     node *fresh_node = new node(inp);
-    fresh_node->set_next(first);
-    first = fresh_node;
+    fresh_node->set_prev(last);
+    last = fresh_node;
     return;
   };
-  
+  //retun node on nth position, doesnt check for out of bounds instead returns 0
+  node* get_node(int inp){
+    clog<<"Getting node :";
+    node *p;
+    p=first;
+    //check for first node to not mess up for loop
+    if(inp=0){
+      clog << p << endl;
+      return p;
+    };
+    //get the node on "inp" position 0 is first node
+    for (int i=0;i<inp;i++){
+      if(p != 0){
+        p = p->get_next();
+      };
+    };
+    clog<<p << "\n" <<endl;
+    clog << p << endl;
+    return p;
+  };
   int length (){
     int out =1;
     node *p = first;
-    clog << p << " First "<< first<<endl;
     if(first == 0){
       return 0;
     }else{
-      clog<<"next node is"<<p->get_next()<<endl;
       while(p->get_next() != 0){
-        clog<<"nex node is"<<p->get_next()<<endl;
         out++;
         p = p->get_next();
-        clog<< p ->get_next()<< endl;
       };
-      clog << "end of while loop"<< endl;
       return out;
     };
   };
+  // deletes given node, doesnt check if node is part of own list
   void delete_node (node *inp){
+    clog<<"deleting node: "<< inp<<endl;
     node *temp_prev, *temp_next;
     temp_next = inp->get_next();
     temp_prev = inp->get_prev();
-
+    clog << "temps all set next: "<<temp_next<<" prev: "<< temp_prev<<endl;
+    //check if last node
     if(temp_next != 0){
       if(inp=first){
         first = temp_next;
       };
+      if(inp=last){
+        last=temp_prev;
+      };
+      clog<< "setting prev "<<endl;
+     //only needs to conect one end to the other f.e. previous to next. Node is setup that atomaticly links both nodes ends together
       temp_next->set_prev(temp_prev);
+    //check if first node
     }else if(temp_prev != 0){
       temp_prev->set_next(temp_next);
+      if(inp=first){
+        first = temp_next;
+      };
+      if(inp=last){
+        last=temp_prev;
+      };
+    //when empty
     }else{
       first = 0;
+      last = 0;
     };
-    
-
+    clog<<"node deleted\n"<<endl;
+    return;
   };
 //constructors
     list(cont *inp){
@@ -159,8 +189,8 @@ int main (){
   for(int i = 1;i< 20;i++){
     cont *temp = new cont(i);
     tes.add_node(temp);
-    clog << "can you hear me"<< i<<endl;
   };
-  clog<<"for loop closed"<< endl;
+  tes.delete_node(tes.get_node(19));
+  tes.delete_node(tes.get_node(0));
   cout<<tes.length()<<endl;
 };
