@@ -65,7 +65,6 @@ class list {
     node *first =0;
     node *current =0;
     node *last =0;
-
 //private functions
 void add_one(){
   if(current->get_next()==NULL){
@@ -97,17 +96,12 @@ void sub (int inp){
   public:
 //public function
   void add_node(cont *inp){
-    clog<<"starting new node"<<endl;
     node *fresh_node = new node(inp);
-    clog<<"hello fresh node"<< fresh_node<<endl;
     fresh_node->set_next(first);
-    clog<<"by old start "<<first <<endl;
     first = fresh_node;
-    clog<<"hello new start "<<first<<endl;
-    clog << "noded added to list\n" <<endl;
     return;
   };
-
+  
   int length (){
     int out =1;
     node *p = first;
@@ -126,7 +120,24 @@ void sub (int inp){
       return out;
     };
   };
+  void delete_node (node *inp){
+    node *temp_prev, *temp_next;
+    temp_next = inp->get_next();
+    temp_prev = inp->get_prev();
 
+    if(temp_next != 0){
+      if(inp=first){
+        first = temp_next;
+      };
+      temp_next->set_prev(temp_prev);
+    }else if(temp_prev != 0){
+      temp_prev->set_next(temp_next);
+    }else{
+      first = 0;
+    };
+    
+
+  };
 //constructors
     list(cont *inp){
       node *temp =new node (inp);
@@ -134,8 +145,6 @@ void sub (int inp){
       last = first;
       return;
     };
-//
-
 //setter
 
 //getter
